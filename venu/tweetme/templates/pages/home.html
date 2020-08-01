@@ -1,1 +1,42 @@
-<h1>Hello world Again</h1>
+{% extends 'base.html' %} {% block content %}
+
+<h1>Hello World , again</h1>
+<div id="tweets">
+  replace me
+</div>
+<script>
+  function handleDidLike(tweet_id, currentCount) {
+    console.log(tweet_id, currentCount);
+  }
+  function likeBtn(tweet) {
+    return (
+      "<button class='btn btn-primary' onclick=handleDidLike(" +
+      tweet.id +
+      "," +
+      tweet.likes +
+      ")>Like</button>"
+    );
+  }
+  function formatTweet(tweet) {
+    let formattedTweet = `<div class="mb-4 tweet" id="tweet-${tweet.id}">
+              <h1>${tweet.content}</h1>
+              <div class="btn-group">${likeBtn(tweet)}</div>
+              </div>`;
+    return formattedTweet;
+  }
+  const tweetsElement = document.getElementById("tweets");
+  tweetsElement.innerHTML = "Loading...";
+  const xhr = fetch("http://127.0.0.1:8000/tweets")
+    .then((res) => res.json())
+    .then((data) => {
+      tweetsList = data.response;
+      finalTweetString = "";
+      for (let i = 0; i < tweetsList.length; i++) {
+        let tweetObj = tweetsList[i];
+        let currentTweet = formatTweet(tweetObj);
+        finalTweetString += currentTweet;
+      }
+      tweetsElement.innerHTML = finalTweetString;
+    });
+</script>
+{% endblock content %}
